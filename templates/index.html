@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: grey;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: pink;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <form action="/weather/report" method="get">
+        
+            <input type="text" name={{city_name}} placeholder="Enter city name" required>
+            <button type="submit">Get Weather</button>
+        </form>
+        {% if data %}
+            <div class="weather-info">
+                <p><strong>City:</strong> {{data.city }}</p>
+                <p><strong>Temperature:</strong> {{data.current_temperature }} &#8451;</p>
+                <p><strong>Humidity:</strong> {{data.current_Humidity }}</p>
+                <p><strong>Wind Speed:</strong> {{ data.current_wind_speed }} m/s</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
