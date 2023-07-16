@@ -10,6 +10,7 @@ import math
 from fastapi import FastAPI
 import uvicorn
 from fastapi.responses import HTMLResponse
+from fastapi import Form
 
 
 
@@ -17,9 +18,12 @@ from fastapi.responses import HTMLResponse
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/weather/report",response_class=HTMLResponse)
-async def root(request: Request,city_name:str="Noida"):
-    # city_name="noida"
+@app.get("/")
+async def search_form(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/weather/report",response_class=HTMLResponse)
+async def weather_report(request: Request, city_name: str = Form(...)):
     user_api="fc802b05fccf507b6a3a1cbffdd0e3a4"
     complete_api_link="https://api.openweathermap.org/data/2.5/weather?q="+city_name+"&appid="+user_api
     api_link=requests.get(complete_api_link)
@@ -27,6 +31,9 @@ async def root(request: Request,city_name:str="Noida"):
 
     if api_data['cod']=='404':
         print("Invalidcity: {}, please check your city name".format(city_name))
+        res = ("Invalidcity: {}, please check your city name".format(city_name))
+        return templates.TemplateResponse("index.html",{"request": request, "res": res, "status": "404", "city_name": city_name })
+        
     else:
         dic={}
         temp_city=str(int((api_data['main']['temp'])-273.15))+" celsius"
@@ -41,9 +48,8 @@ async def root(request: Request,city_name:str="Noida"):
         date_time=datetime.now().strftime("%d %b %Y | %I:%M:%S:%p")
         dic['date_time']=date_time
 
-        # json_object = json.dumps(dic, indent=4) 
-        # print(type(dic))
-        return templates.TemplateResponse("index.html", {"request": request, "data": dic})
+        return templates.TemplateResponse("index.html", {"request": request, "data": dic, "city_name": city_name})
+
 
 
 if __name__ == "__main__":
